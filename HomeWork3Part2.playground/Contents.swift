@@ -257,7 +257,7 @@ class Screen {
             
             resultStringToPrint += "\n\(index + 1) "
             resultStringToPrint += "Назва продукту: \(product.name), "
-            resultStringToPrint += "Ціна: \(currency.rawValue) \(String(format: "%.2f", product.price))"
+            resultStringToPrint += "Ціна: \(currency.rawValue) \(String(format: "%.2f", productprice))"
         }
         
         resultStringToPrint += "\n---------------------------------------------------------------------"
@@ -422,13 +422,15 @@ screen.printCheck(cart: cart)
 
 // Початок коду сценарію для Пункт 3
 
-/*
+// Для правильного відображенння ціни у валютах:
+// - зроблено зміни у функції printCart(cart: Сart, currency: Сurrency)
+// під час виводу ціни на екран - виводилося оригінальне значення у гривня "product.price",
+// а не розрахунки збережені у змінній "productprice".
 
 print("\nSCENARIO 3:\n")
 
 // Користувач обирає якусь кількість товарів
 cart.products = dataMapper.products(from: responseFromServer.sourceProducts)
-
 // Користувач натискає кнопку зміни валюти на UAH
 screen.printCart(cart: cart, currency: .uah)
 // Користувач натискає кнопку зміни валюти на USD
@@ -436,7 +438,7 @@ screen.printCart(cart: cart, currency: .usd)
 // Користувач натискає кнопку зміни валюти на EUR
 screen.printCart(cart: cart, currency: .eur)
 
- */
+ 
  
 // Кінець коду сценарію для Пункт 3
 
