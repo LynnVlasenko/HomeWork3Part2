@@ -93,9 +93,9 @@ class Cart {
     }
     
     func clear() {
-        for index in 0 ... products.count {
-            products.remove(at: index)
-        }
+        products.removeAll() // змінюю remove(at: index) на removeAll(), щоб не було помилки
+                             // видаляючи з remove(at: index) нам потрібно видаляти об'єкти з останнього ідексу до 0
+                             // але так не праццює, для цього існує метод .removeAll()
     }
     
     func totalPrice() -> Double {
@@ -195,31 +195,38 @@ class Screen {
     
     func printCheck(cart: Cart) {
         
-        var resultStringToPrint = ""
-        
-        let firstLine = "--------------- ФІСКАЛЬНИЙ ЧЕК ----------------"
-        resultStringToPrint += firstLine
-        
-        let separatorLine = "\n-----------------------------------------------"
-        
-        for index in 0 ..< cart.products.count {
-            let product = cart.products[index]
-            resultStringToPrint += "\n\(index + 1)\n"
-            resultStringToPrint += product.textDescription()
+        if cart.products.isEmpty {
+            
+            print("Кошик пустий. Для оформлення замовлення додайте хоча б один товар")
+            
+        } else {
+            
+            var resultStringToPrint = ""
+            
+            let firstLine = "--------------- ФІСКАЛЬНИЙ ЧЕК ----------------"
+            resultStringToPrint += firstLine
+            
+            let separatorLine = "\n-----------------------------------------------"
+            
+            for index in 0 ..< cart.products.count {
+                let product = cart.products[index]
+                resultStringToPrint += "\n\(index + 1)\n"
+                resultStringToPrint += product.textDescription()
+            }
+            
+            resultStringToPrint += separatorLine
+            
+            resultStringToPrint += "\nTotal price: \(String(format: "%.2f", cart.totalPrice())) UAH"
+            resultStringToPrint += "\nDiscount: \(cart.discountPercentValue())%"
+            
+            resultStringToPrint += separatorLine
+            
+            resultStringToPrint += "\nTotal price with Discount:\n\(String(format: "%.2f", cart.totalPriceWithDiscount())) UAH"
+            
+            resultStringToPrint += separatorLine + separatorLine
+            
+            print(resultStringToPrint)
         }
-        
-        resultStringToPrint += separatorLine
-        
-        resultStringToPrint += "\nTotal price: \(String(format: "%.2f", cart.totalPrice())) UAH"
-        resultStringToPrint += "\nDiscount: \(cart.discountPercentValue())%"
-        
-        resultStringToPrint += separatorLine
-        
-        resultStringToPrint += "\nTotal price with Discount:\n\(String(format: "%.2f", cart.totalPriceWithDiscount())) UAH"
-        
-        resultStringToPrint += separatorLine + separatorLine
-        
-        print(resultStringToPrint)
     }
     
     func printCart(cart: Cart, currency: Currency) {
@@ -287,7 +294,7 @@ class Screen {
 
 // Початок коду сценарію для Пункт 1
 
-/*
+// Для коректної роботи коду - змінено значенння для cart.discount = .vip (було .none)
 
 print("SCENARIO 1:\n")
 
@@ -304,7 +311,7 @@ let cart = Cart()
 // Звертаємось до поля (змінної класу Cart), щоб записати в неї масив сконвертованих даних
 cart.products = dataMapper.products(from: receivedProducts)
 // Звертаємось до поля (змінної класу Cart), щоб записати значення discount
-cart.discount = .none
+cart.discount = .vip // змінюю значення discount, так як клієнт має VIP знижку
 
 // Створюємо константу для зберігання "екземпляру" (instanse) Screen
 let screen = Screen()
@@ -312,7 +319,7 @@ let screen = Screen()
 // і передаємо константу cart як параметр у функцію
 screen.printCheck(cart: cart)
 
-*/
+
 
 // Кінець коду сценарію для Пункт 1
 
@@ -359,19 +366,22 @@ screen.printCheck(cart: cart)
 
 // Початок коду сценарію для Пункт 2
 
-/*
+
+// Для роботи коду за запитом тестувальника:
+// - виправлена функція clear()
+// - дописана функціональність у функцію printCheck(cart: Cart)
  
 print("\nSCENARIO 2:\n")
 
 // Користувач додає три товари у кошик
 cart.products = dataMapper.products(from: responseFromServer.get3Products())
+
 // Користувач натискає десь на екрані кнопку "Очистити кошик" (Clear)
 cart.clear()
 
 // Користувач натискає кнопку "Оформити замовлення", щоб побачити чек
 screen.printCheck(cart: cart)
 
- */
 
 // Кінець коду сценарію для Пункт 2
 
